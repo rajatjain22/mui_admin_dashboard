@@ -25,6 +25,7 @@ const { black, white } = colors;
 const { borderWidth, borderRadius } = borders;
 const { cardBoxShadow } = boxShadows;
 
+
 const card = {
   styleOverrides: {
     root: {
@@ -37,5 +38,6 @@ const card = {
     },
   },
 };
+
 
 export default card;
