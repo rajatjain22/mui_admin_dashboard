@@ -1,10 +1,8 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import MuiListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import MuiListItemText from "@mui/material/ListItemText";
 import {
   Toolbar,
@@ -14,9 +12,13 @@ import {
   Divider,
   IconButton,
   ListItemIcon,
+  ListItemButton,
+  Box,
 } from "@mui/material";
 import { Menu, MoveToInbox, Mail, MenuOpen, Close } from "@mui/icons-material";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import MenuItems from "./MenuItems";
 
 const drawerWidth = 256;
 const appDrawerHeight = 250;
@@ -34,6 +36,7 @@ const openedMixin = (theme) => ({
     paddingRight: 0,
     visibility: "visible !important",
     boxShadow: "unset",
+    borderRight: 0,
   }),
 });
 
@@ -109,6 +112,8 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   ...theme,
+  position: "fixed",
+  zIndex: 3,
   width: drawerWidth,
   flexShrink: 0,
   height: "100vh",
@@ -178,31 +183,56 @@ const DrawerList = ({ open, handleDrawerOpen }) => (
     </DrawerHeader>
     <Divider />
     <List>
-      {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-        <ListItem key={text} disablePadding>
-          <ListItemButton
-            sx={{
-              minHeight: 48,
-              justifyContent: open ? "initial" : "center",
-              px: 2.5,
-            }}
-          >
-            <ListItemIcon
+      {MenuItems.map((val, index) => (
+        <Link to={val.path} key={index}>
+          <ListItem disablePadding>
+            <ListItemButton
               sx={{
-                minWidth: 0,
-                mr: open ? 3 : { md: 3 },
-                justifyContent: "center",
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
               }}
             >
-              {index % 2 === 0 ? <MoveToInbox /> : <Mail />}
-            </ListItemIcon>
-            <ListItemText primary={text} open={open} />
-          </ListItemButton>
-        </ListItem>
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : { md: 3 },
+                  justifyContent: "center",
+                }}
+              >
+                {index % 2 === 0 ? <MoveToInbox /> : <Mail />}
+              </ListItemIcon>
+              <ListItemText primary={val.label} open={open} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
       ))}
     </List>
   </Box>
 );
+
+const MainBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  ...(!open && {
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: `calc(${theme.spacing(7)} + 35px)`,
+    },
+    [theme.breakpoints.up("md")]: {
+      marginLeft: drawerWidth,
+    },
+  }),
+  ...(open && {
+    marginLeft: drawerWidth,
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: 0,
+    },
+  }),
+}));
 
 export default function Sidenav({ children }) {
   const [open, setOpen] = React.useState(false);
@@ -212,9 +242,10 @@ export default function Sidenav({ children }) {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    // <Box sx={{ display: "flex" }}>
+    <Box>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="absolute" open={open}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -243,6 +274,7 @@ export default function Sidenav({ children }) {
       </Drawer>
 
       <Drawer
+        position="fixed"
         className={open && "backDrop"}
         variant="temporary"
         ModalProps={{
@@ -255,7 +287,7 @@ export default function Sidenav({ children }) {
         <DrawerList open={open} handleDrawerOpen={handleDrawerOpen} />
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <MainBox open={open} component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <Box
           component="main"
@@ -271,7 +303,7 @@ export default function Sidenav({ children }) {
         >
           {children}
         </Box>
-      </Box>
+      </MainBox>
     </Box>
   );
 }
