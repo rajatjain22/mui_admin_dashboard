@@ -12,11 +12,12 @@ function App() {
         <Route path="/" element={<ProtectorRouter />}>
           <Route index element={<Dashboard />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<Products />} />
         </Route>
         <Route path="/auth" element={<AuthRouter />}>
           <Route index element={<Dashboard />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </BrowserRouter>
   );

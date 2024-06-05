@@ -4,4 +4,4 @@ const MenuItems = [
   { label: "Customers", path: "/customers" },
 ];
 
-export default MenuItems;
+export { MenuItems };

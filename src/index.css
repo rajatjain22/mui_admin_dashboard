@@ -1,8 +1,19 @@
-body{
-    background-color:rgb(234 234 234) !important
+body {
+  background-color: rgb(234 234 234) !important;
 }
 
-.backDrop .MuiBackdrop-root{
-    opacity: 1 !important;
-    visibility: visible !important;
+/*===================================== Sidenav bar =====================================*/
+.active .MuiButtonBase-root {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.backDrop .MuiBackdrop-root {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/*===================================== Link =====================================*/
+.link-override {
+  text-decoration: none;
+  color: inherit;
 }

@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 import { Menu, MoveToInbox, Mail, MenuOpen, Close } from "@mui/icons-material";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import MenuItems from "./MenuItems";
+import { Link, useLocation } from "react-router-dom";
+import { MenuItems } from "./MenuItems";
 
 const drawerWidth = 256;
 const appDrawerHeight = 250;
@@ -146,70 +146,21 @@ const ListItemText = styled(MuiListItemText, {
 
 const ListItem = styled(MuiListItem)(({ theme }) => ({
   display: "block",
-  borderBottomRightRadius: 24,
-  borderTopRightRadius: 24,
+  // borderBottomRightRadius: 24,
+  // borderTopRightRadius: 24,
   transition: theme.transitions.create(["backgroundColor", "transform"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.standard,
   }),
   "&:hover": {
-    backgroundColor: "#574476",
-    // transform: "scale(1.3)",
+    // "& .MuiListItemIcon-root": {
+    //   color: "#2d2d2d",
+    // },
+    // "& .MuiTypography-root": {
+    //   fontWeight: "bold",
+    // },
   },
 }));
-
-const DrawerList = ({ open, handleDrawerOpen }) => (
-  <Box
-    sx={{
-      height: "100%",
-      borderRadius: "10px",
-      boxShadow:
-        "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;",
-      backgroundColor: "white",
-    }}
-  >
-    <DrawerHeader>
-      <IconButton
-        color="inherit"
-        aria-label="open drawer"
-        onClick={handleDrawerOpen}
-        edge="start"
-        sx={{
-          display: { xs: "block", sm: "none" },
-        }}
-      >
-        {open ? <Close /> : <Menu />}
-      </IconButton>
-    </DrawerHeader>
-    <Divider />
-    <List>
-      {MenuItems.map((val, index) => (
-        <Link to={val.path} key={index}>
-          <ListItem disablePadding>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : { md: 3 },
-                  justifyContent: "center",
-                }}
-              >
-                {index % 2 === 0 ? <MoveToInbox /> : <Mail />}
-              </ListItemIcon>
-              <ListItemText primary={val.label} open={open} />
-            </ListItemButton>
-          </ListItem>
-        </Link>
-      ))}
-    </List>
-  </Box>
-);
 
 const MainBox = styled(Box, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -234,6 +185,68 @@ const MainBox = styled(Box, {
   }),
 }));
 
+const DrawerList = ({ open, handleDrawerOpen }) => {
+  const location = useLocation();
+  const { pathname } = location;
+
+  return (
+    <Box
+      sx={{
+        height: "100%",
+        borderRadius: "10px",
+        boxShadow:
+          "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;",
+        backgroundColor: "white",
+      }}
+    >
+      <DrawerHeader>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerOpen}
+          edge="start"
+          sx={{
+            display: { xs: "block", sm: "none" },
+          }}
+        >
+          {open ? <Close /> : <Menu />}
+        </IconButton>
+      </DrawerHeader>
+      <Divider />
+      <List>
+        {MenuItems.map((val, index) => (
+          <Link
+            to={val.path}
+            className={`link-override ${pathname === val.path ? "active" : ""}`}
+            key={index}
+          >
+            <ListItem disablePadding>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  // px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : { md: 3 },
+                    justifyContent: "center",
+                  }}
+                >
+                  {index % 2 === 0 ? <MoveToInbox /> : <Mail />}
+                </ListItemIcon>
+                <ListItemText primary={val.label} open={open} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ))}
+      </List>
+    </Box>
+  );
+};
+
 export default function Sidenav({ children }) {
   const [open, setOpen] = React.useState(false);
 
@@ -253,8 +266,9 @@ export default function Sidenav({ children }) {
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              marginRight: 5,
-              display: { xs: "block", md: "none" },
+              p: 0,
+              pr: 1,
+              display: { xs: "flex", md: "none" },
             }}
           >
             {open ? <MenuOpen /> : <Menu />}
@@ -264,7 +278,7 @@ export default function Sidenav({ children }) {
           </Typography>
         </Toolbar>
       </AppBar>
-
+            
       <Drawer
         sx={{ display: { xs: "none", sm: "block" } }}
         variant="permanent"
@@ -287,18 +301,13 @@ export default function Sidenav({ children }) {
         <DrawerList open={open} handleDrawerOpen={handleDrawerOpen} />
       </Drawer>
 
-      <MainBox open={open} component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <MainBox open={open} component="main" sx={{ flexGrow: 1, px: 3 }}>
         <DrawerHeader />
         <Box
           component="main"
           sx={{
             zIndex: 2,
             position: "relative",
-            // backgroundColor: "white",
-            // p: 1,
-            // borderRadius: 2,
-            // boxShadow:
-            //   "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;",
           }}
         >
           {children}
