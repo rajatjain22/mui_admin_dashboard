@@ -248,6 +248,10 @@ const DrawerList = ({ open, handleDrawerOpen }) => {
 };
 
 export default function Sidenav({ children }) {
+  const { pathname } = useLocation();
+  const pathArray = pathname.split("/").filter((e) => e !== "");
+  const lastPath = pathArray.splice(pathArray.length - 1);
+
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -255,7 +259,6 @@ export default function Sidenav({ children }) {
   };
 
   return (
-    // <Box sx={{ display: "flex" }}>
     <Box>
       <CssBaseline />
       <AppBar position="absolute" open={open}>
@@ -273,12 +276,20 @@ export default function Sidenav({ children }) {
           >
             {open ? <MenuOpen /> : <Menu />}
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+          <Typography
+            variant="h6"
+            noWrap
+            textTransform="uppercase"
+            fontSize={20}
+            fontWeight={700}
+            letterSpacing={1}
+            component="div"
+          >
+            {lastPath.length ? lastPath[0] : "dashboard"}
           </Typography>
         </Toolbar>
       </AppBar>
-            
+
       <Drawer
         sx={{ display: { xs: "none", sm: "block" } }}
         variant="permanent"
@@ -304,7 +315,7 @@ export default function Sidenav({ children }) {
       <MainBox open={open} component="main" sx={{ flexGrow: 1, px: 3 }}>
         <DrawerHeader />
         <Box
-          component="main"
+          component="article"
           sx={{
             zIndex: 2,
             position: "relative",

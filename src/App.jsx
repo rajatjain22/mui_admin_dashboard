@@ -4,6 +4,7 @@ import ProtectorRouter from "./Routers/ProtectorRouter";
 import AuthRouter from "./Routers/AuthRouter";
 import NotFound from "./pages/NotFound";
 import Products from "./pages/Products";
+import Login from "./pages/Auth/Login";
 
 function App() {
   return (
@@ -13,11 +14,11 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<Products />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="/auth" element={<AuthRouter />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<Login />} />
         </Route>
-        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </BrowserRouter>
   );

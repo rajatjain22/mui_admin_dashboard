@@ -18,7 +18,11 @@ export default function CustomBreadcrumbs() {
         <Link
           key={index}
           underline="hover"
-          sx={{ display: "flex", alignItems: "center" }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            textTransform: "capitalize",
+          }}
           component={RouterLink}
           to={path}
         >
@@ -33,7 +37,10 @@ export default function CustomBreadcrumbs() {
       <Breadcrumbs sx={{ color: "white" }} aria-label="breadcrumb">
         <Link
           underline="hover"
-          sx={{ display: "flex", alignItems: "center" }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
           component={RouterLink}
           to="/"
         >
@@ -42,8 +49,12 @@ export default function CustomBreadcrumbs() {
         {createBreadcrumbs()}
 
         <Typography
-          sx={{ display: "flex", alignItems: "center" }}
-          color="white"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            textTransform: "capitalize",
+          }}
+          color="#dbcbcb"
           fontWeight="bold"
         >
           {lastPath.length ? lastPath[0] : "dashboard"}
