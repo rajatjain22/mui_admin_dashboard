@@ -1,10 +1,10 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { alpha } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import MuiTableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
@@ -20,6 +20,19 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { useState, useMemo } from "react";
+import { useTheme } from "@emotion/react";
+
+const TableCell = styled(MuiTableCell)(({ theme }) => {
+  return {
+    padding: theme.spacing(1.5, 3, 1.25),
+    fontSize: theme.typography.pxToRem(12),
+    fontWeight: theme.typography.fontWeightBold,
+    opacity: 0.7,
+    background: "transparent",
+    borderBottom: `0.0625rem solid ${theme.palette.divider}`,
+    textTransform: "uppercase",
+  };
+});
 
 function createData(id, name, calories, fat, carbs, protein) {
   return {
@@ -81,7 +94,7 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Dessert (100g serving)",
+    label: "Dessert",
   },
   {
     id: "calories",
@@ -93,13 +106,13 @@ const headCells = [
     id: "fat",
     numeric: true,
     disablePadding: false,
-    label: "Fat (g)",
+    label: "Fat",
   },
   {
     id: "carbs",
     numeric: true,
     disablePadding: false,
-    label: "Carbs (g)",
+    label: "Carbs",
   },
   {
     id: "protein",
@@ -110,6 +123,8 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
+  const theme = useTheme();
+  // console.log(theme)
   const {
     onSelectAllClick,
     order,
@@ -125,22 +140,11 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
+            sx={{ color: theme.palette.text.secondary }}
+            // align={headCell.numeric ? "right" : "left"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -229,7 +233,8 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function ProductTable() {
+export default function SimpleTable() {
+  const theme = useTheme();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
@@ -333,27 +338,35 @@ export default function ProductTable() {
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
                     <TableCell
-                      component="th"
+                      component="td"
                       id={labelId}
                       scope="row"
-                      padding="none"
+                      // padding="none"
                     >
-                      {row.name}
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        alignItems="center"
+                        gap={2}
+                      >
+                        <img src="./vite.svg" alt="product" />
+                        <Box display="flex" flexDirection="column">
+                          <Typography
+                            variant="body1"
+                            fontSize={theme.typography.pxToRem(12)}
+                            fontWeight={theme.typography.fontWeightBold}
+                          >
+                            {row.name}
+                          </Typography>
+                          <Typography variant="caption">Description</Typography>
+                        </Box>
+                      </Box>
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell component="td">{row.calories}</TableCell>
+                    <TableCell component="td">{row.fat}</TableCell>
+                    <TableCell component="td">{row.carbs}</TableCell>
+                    <TableCell component="td">{row.protein}</TableCell>
                   </TableRow>
                 );
               })}

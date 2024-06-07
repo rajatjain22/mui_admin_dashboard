@@ -1,10 +1,14 @@
-import React from 'react'
-import ProductTable from "../components/Tables/ProductTable/ProductTable";
+import React from "react";
+import SimpleTable from "../components/Tables/ProductTable/SimpleTable";
+import DataTable from "../components/Tables/ProductTable/DataTable";
 
 function Products() {
   return (
-    <ProductTable />
-  )
+    <>
+      {/* <DataTable /> */}
+      <SimpleTable />
+    </>
+  );
 }
 
-export default Products
+export default Products;
